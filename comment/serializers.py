@@ -45,7 +45,7 @@ class SurpriseEmotionSerializer(serializers.ModelSerializer):
 class AngryEmotionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emotion
-        fields = ('sad_cnt',)
+        fields = ('angry_cnt',)
 
 
 # 댓글들 Serializer
