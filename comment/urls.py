@@ -13,7 +13,7 @@ comment_list = views.CommentViewSet.as_view({'get': 'list', 'post': 'create'})
 
 urlpatterns = [
     path("home/", user_list, name="root"), # 홈화면 조회
-    path("home/<str:post>/", views.EmotionViewSet.as_view(), name="profile"), # 재난별 페이지
+    path("home/<str:post>/", views.detail_view, name="profile"), # 재난별 페이지
     path("home/<str:post>/sad", views.sad_add, name="sad"), # 슬픈 감정 추가
     path("home/<str:post>/surprise", views.surprise_add, name="comment"), # 놀란 감정 추가
     path("home/<str:post>/angry", views.angry_add, name="comment"), # 화난 감정 추가

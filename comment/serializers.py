@@ -38,7 +38,7 @@ class SadEmotionSerializer(serializers.ModelSerializer):
 class SurpriseEmotionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emotion
-        fields = ('s',)
+        fields = ('surprise_cnt',)
 
 
 # 화난 감정 Serializer
