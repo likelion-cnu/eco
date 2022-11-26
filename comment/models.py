@@ -7,7 +7,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="Comment_Post")
-    content = models.CharField(max_length=100)
+    content = models.TextField(max_length=300)
     
 
 class Emotion(models.Model):

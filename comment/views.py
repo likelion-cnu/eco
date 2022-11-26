@@ -1,3 +1,6 @@
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView 
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -40,6 +43,7 @@ def detail_view(request, post):
         n_post = Post.objects.get(post_pk=post)
         
         Emotion(post=n_post).save()
+        Comment(post=n_post).save()
         
         new_post = Emotion.objects.get(post=post)
         serializer = EmotionSerializer(new_post)
@@ -88,13 +92,43 @@ def angry_add(request, post):
         return Response(serializer.data, status=201)
 
 
-# 댓글 조회, 추가
-class CommentViewSet(ModelViewSet):
+# 댓글 조회, 삭제
+class ReadCommentViewSet(ReadOnlyModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     pagination_class = Pagination
-
+    
+    lookup_field = 'post'
+    
+    def get_queryset(self):
+        post = Post.objects.get(post_pk=self.kwargs.get('post'))
+        qs = super().get_queryset()
+        qs = qs.filter(post = post)
+        return qs
+    
+# 댓글 업데이트, 삭제
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    
     lookup_field = 'post'
 
+    
+# 댓글 생성하기
+class PostCommentViewSet(CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    
+    lookup_field = 'post'
+
+    def get_queryset(self):
+        post = Post.objects.get(post_pk=self.kwargs.get('post'))
+        qs = super().get_queryset()
+        qs = qs.filter(post = post)
+        return qs
+    
     def perform_create(self, serializer):
-        serializer.save(post_id=self.kwargs['post'])
+        serializer.save(post=Post.objects.get(post_pk=self.kwargs.get('post')))
+
+    
+    
