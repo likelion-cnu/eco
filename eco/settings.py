@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'comment',
 
     # third apps
-    'qrcode',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
