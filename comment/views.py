@@ -81,7 +81,7 @@ def surprise_add(request, post):
 def angry_add(request, post):
     if request.method == 'POST':
         angry = Emotion.objects.get(post=post)
-        angry.sad_cnt += 1
+        angry.angry_cnt += 1
         angry.save()
         
         serializer = AngryEmotionSerializer(angry)
