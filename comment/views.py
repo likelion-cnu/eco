@@ -19,6 +19,8 @@ class PostViewSet(ReadOnlyModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = Pagination
+    
+
 
 
 # 재난별 페이지

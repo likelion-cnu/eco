@@ -7,7 +7,7 @@ from django.conf import settings
 from . import views
 
 
-user_list = views.PostViewSet.as_view({'get': 'retrieve'})
+user_list = views.PostViewSet.as_view({'get': 'list'})
 
 comment_list = views.CommentViewSet.as_view({'get': 'list', 'post': 'create'})
 
