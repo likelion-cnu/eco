@@ -24,14 +24,6 @@ class PostViewSet(ReadOnlyModelViewSet):
     pagination_class = Pagination
     
 
-
-# 재난별 페이지
-# class EmotionViewSet(RetrieveAPIView):
-#     queryset = Emotion.objects.all()
-#     serializer_class = EmotionSerializer
-
-#     lookup_field = 'post'
-
 # 재난별 페이지를 
 @api_view(['GET']) # 중복 생성 안되게
 def detail_view(request, post):
@@ -92,7 +84,7 @@ def angry_add(request, post):
         return Response(serializer.data, status=201)
 
 
-# 댓글 조회, 삭제
+# 댓글 조회
 class ReadCommentViewSet(ReadOnlyModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -106,12 +98,26 @@ class ReadCommentViewSet(ReadOnlyModelViewSet):
         qs = qs.filter(post = post)
         return qs
     
-# 댓글 업데이트, 삭제
-class CommentViewSet(viewsets.ModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
     
-    lookup_field = 'post'
+# 댓글 업데이트, 삭제
+@api_view(['GET','PUT','DELETE'])
+def comment_detail_update_delete(request, post_pk, comment_pk): 
+    
+    comment = get_object_or_404(Comment, pk=comment_pk, post=post_pk)
+    
+    if request.method=='GET':
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+    
+    elif request.method =='DELETE':
+        comment.delete()
+        return Response({'comment_pk':comment_pk},status=204)
+    
+    elif request.method=='PUT':
+        serializer=CommentSerializer(data=request.data, instance=comment)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data,status=200)
 
     
 # 댓글 생성하기
