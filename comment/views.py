@@ -84,20 +84,27 @@ def angry_add(request, post):
         return Response(serializer.data, status=201)
 
 
-# 댓글 조회
-class ReadCommentViewSet(ReadOnlyModelViewSet):
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    pagination_class = Pagination
+# 댓글 조회 -> api View로 변경하기
+@api_view(['GET']) 
+def comments_view(request, post):
+    try: # when
+        comments = Comment.objects.filter(post=post)
+        
+    except ObjectDoesNotExist: # 에러가 생긴다면
+        n_post = Post.objects.get(post_pk=post)
+        Emotion(post=n_post).save()
+        Comment(post=n_post).save()
+        
+        new_post = Comment.objects.filter(post=post)
+        serializer = CommentSerializer(new_post, many=True)
+        return Response(serializer.data, status=201)
     
-    lookup_field = 'post'
-    
-    def get_queryset(self):
-        post = Post.objects.get(post_pk=self.kwargs.get('post'))
-        qs = super().get_queryset()
-        qs = qs.filter(post = post)
-        return qs
-    
+    else: # 에러가 생기지 않는다면
+        new_post = Comment.objects.filter(post=post)
+        serializer = CommentSerializer(new_post, many=True)
+        return Response(serializer.data, status=201)
+
+
     
 # 댓글 업데이트, 삭제
 @api_view(['GET','PUT','DELETE'])
